@@ -1,11 +1,13 @@
 // du.cpp: archivo de proyecto principal.
 
 #include "stdafx.h"
+#include <iostream>
+#include "ArgumentsParser.h"
 
-using namespace System;
+using namespace std;
 
-int main(array<System::String ^> ^args)
-{
-    Console::WriteLine(L"Hola a todos");
-    return 0;
+int main(int argc, char *argv[]) {
+	cout << "Argumentos a la llamada:\n";
+	ArgumentsParser parser(argc, argv);
+	parser.listArguments();
 }
