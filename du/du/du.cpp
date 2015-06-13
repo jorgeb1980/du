@@ -2,6 +2,9 @@
 #include <iostream>
 #include "ArgumentsParser.h"
 #include <list>
+#include <windows.h>
+#include <tchar.h>
+#include "File.h"
 
 using namespace std;
 
@@ -29,15 +32,26 @@ void printWrongArguments(string argument) {
 	<< "Try `du --help' for more information.";
 }
 
+// Lists the contents of the directory
+void listContents(DuConfig& config) {
+
+
+	File root(config.currentDirectory);
+	root.traverse();
+}
+
 // Application entry point
 // Quite outdated, my C++ is not quite up-to-date
 int main(int argc, char *argv[]) {
 	try {
 		ArgumentsParser parser(argc, argv);
-		parser.listArguments();
+		//parser.listArguments();
 		DuConfig& config = parser.exportConfig();
 		if (config.help) {
 			printHelp();
+		}
+		else {
+			listContents(config);
 		}
 	}
 	catch (string s) {

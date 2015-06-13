@@ -82,6 +82,7 @@
   <ItemGroup>
     <ClInclude Include="ArgumentsParser.h" />
     <ClInclude Include="DuConfig.h" />
+    <ClInclude Include="File.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
@@ -93,6 +94,7 @@
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="du.cpp" />
     <ClCompile Include="DuConfig.cpp" />
+    <ClCompile Include="File.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
