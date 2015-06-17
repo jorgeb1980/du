@@ -7,6 +7,7 @@
 using namespace std;
 
 // Possible options
+// Kept this way to make it simpler to maintain... not sure about it :S
 #define NUM_OPTIONS 8
 static const string ACCEPTABLE_OPTIONS_ARRAY[NUM_OPTIONS] = { 
 	string("a"), 
@@ -91,6 +92,25 @@ DuConfig& ArgumentsParser::exportConfig() {
 	else {
 		if (CONTAINS(options, string("a"))) {
 			config.all = true;
+		}
+		if (CONTAINS(options, string("s"))) {
+			config.summarize = true;
+		}
+		if (CONTAINS(options, string("c"))) {
+			config.total = true;
+		}
+		// Presentation in hierarchical order
+		if (CONTAINS(options, string("m"))) {
+			config.precision = Precision::MEGABYTES;
+		}
+		if (CONTAINS(options, string("h"))) {
+			config.precision = Precision::HUMAN_READABLE;
+		}
+		if (CONTAINS(options, string("k"))) {
+			config.precision = Precision::KILOBYTES;
+		}
+		if (CONTAINS(options, string("b"))) {
+			config.precision = Precision::BYTES;
 		}
 	}
 	return config;

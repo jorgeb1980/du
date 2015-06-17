@@ -5,6 +5,7 @@
 #include <windows.h>
 #include <tchar.h>
 #include "File.h"
+#include <sstream>
 
 using namespace std;
 
@@ -32,12 +33,97 @@ void printWrongArguments(string argument) {
 	<< "Try `du --help' for more information.";
 }
 
+// Human presentation file size function shamelessly stolen from
+// http://programanddesign.com/cpp/human-readable-file-size-in-c/
+void readable_fs(unsigned long size/*in bytes*/, std::string& s) {
+    int i = 0;
+    const char* units[] = {"", "K", "M", "G", "T", "P", "E", "Z", "Y"};
+    while (size > 1024 && i <= 8) {
+        size /= 1024;
+			i++;
+    }
+	std::string number;
+	std::stringstream strstream;
+	strstream << size;
+	strstream >> number;
+	s = number + std::string(units[i]);
+}
+
+#define TABULATION 8
+// Writes a number with a certain presentation
+void writeNumber(unsigned long number, DuConfig& config) {
+	std::string size;
+	// file size
+	cout.width(TABULATION);
+	switch(config.precision) {
+	case Precision::MEGABYTES:
+		cout << left << number / (1024 * 1024);
+		break;
+	case Precision::HUMAN_READABLE:
+		readable_fs(number, size);
+		cout << left << size.c_str();
+		break;
+	case Precision::BYTES:
+		cout << left << number;
+		break;
+	case Precision::KILOBYTES:
+	default:
+		cout << left << number / 1024;
+	}
+}
+
+// Presentation of a file/directory
+void printFile(File& file, DuConfig& config) {
+	writeNumber(file.getSize(), config);
+	// Separation
+	int tmpSize = _tcslen(file.getName()) + 1;
+	TCHAR* tmp = new TCHAR[tmpSize];
+	memset(tmp, 0, sizeof(TCHAR)*tmpSize);
+	TCHAR* original = file.getName();
+	// VERY DIRTY!!! Only way I could think of replacing it while playing with TCHAR...
+	// However, being aware that this is crap, it has a very exciting C/C++ flavor :D
+	original = original + _tcslen(config.currentDirectory);
+	// Replace the root file path by '.'
+	_stprintf(tmp,_T(".%s"), original);
+
+	_tprintf(TEXT("%s"), tmp);
+	cout << "\n";
+	delete[] tmp;
+}
+
+// Recursive call with depth control
+void traverseI(File& file, DuConfig& config, int& depth) {
+	if (file.isDirectory()) {
+		std::list<File*>& children = file.getChildren();
+		depth++;
+		if (!config.summarize || depth <= 1) {
+			for (list<File*>::iterator it = children.begin(); it != children.end(); it++) {
+				//PRINT_DIR((*it));
+				File f = *(*it);
+				traverseI(f, config, depth);
+			}
+		}
+		printFile(file, config);
+	}
+}
+
+
+// Width traverse of the File structure
+void traverse(File& root, DuConfig& config) {
+	int depth = 0;
+	traverseI(root, config, depth);
+}
+
 // Lists the contents of the directory
 void listContents(DuConfig& config) {
-
-
 	File root(config.currentDirectory);
-	root.traverse();
+	traverse(root, config);
+	if (config.total) {
+		// Produce grand total
+		// Whatever it is used for??
+		writeNumber(root.getSize(), config);
+		cout << "total" << "\n";
+	}
 }
 
 // Application entry point

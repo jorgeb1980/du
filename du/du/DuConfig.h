@@ -9,9 +9,15 @@ typedef enum Precision { HUMAN_READABLE, MEGABYTES, KILOBYTES, BYTES };
 // class (struct actually) with the information
 class DuConfig {
 public:
+	// --help
 	bool help;
+	// -a
 	bool all;
+	// -c
+	bool total;
+	// -s
 	bool summarize;
+	// -mbkh
 	Precision precision;
 	TCHAR *currentDirectory;
 

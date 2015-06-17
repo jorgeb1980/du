@@ -18,8 +18,8 @@ public:
 	~File();
 	TCHAR* File::getName();
 	bool File::isDirectory();
-	void File::traverse();
 	unsigned long File::getSize();
+	std::list<File*>& getChildren();
 };
 
 #endif

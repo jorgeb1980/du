@@ -7,6 +7,7 @@ DuConfig::DuConfig() {
 	help = false;
 	all = false;
 	summarize = false;
+	total = false;
 
 	// Get current directory
 	DWORD dwRet;

@@ -80,14 +80,9 @@ bool File::isDirectory() {
 	return directory;
 }
 
-#define PRINT_DIR(F)  _tprintf(TEXT("%s -> "), F->getName());cout << F->getSize() << "\n";
-// Width traverse of the File structure
-void File::traverse() {
-	PRINT_DIR(this);
-	for (list<File*>::iterator it = children.begin(); it != children.end(); it++) {
-		//PRINT_DIR((*it));
-		(*it)->traverse();
-	}
+// Children list
+std::list<File*>& File::getChildren() {
+	return children;
 }
 
 // size getter
