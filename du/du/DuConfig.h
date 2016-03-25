@@ -2,6 +2,7 @@
 #define __DU_CONFIG_H__
 
 #include <tchar.h>
+#include <list>
 #include <windows.h>
 // precision of the file size reading
 typedef enum Precision { HUMAN_READABLE, MEGABYTES, KILOBYTES, BYTES };
@@ -20,6 +21,9 @@ public:
 	// -mbkh
 	Precision precision;
 	TCHAR *currentDirectory;
+
+	// Files specified
+	std::list<std::string> files;
 
 	DuConfig();
 	~DuConfig();	

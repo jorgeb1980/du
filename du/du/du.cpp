@@ -35,7 +35,7 @@ void printWrongArguments(string argument) {
 
 // Human presentation file size function shamelessly stolen from
 // http://programanddesign.com/cpp/human-readable-file-size-in-c/
-void readable_fs(unsigned long size/*in bytes*/, std::string& s) {
+void readable_fs(DWORDLONG size/*in bytes*/, std::string& s) {
     int i = 0;
     const char* units[] = {"", "K", "M", "G", "T", "P", "E", "Z", "Y"};
     while (size > 1024 && i <= 8) {
@@ -51,7 +51,7 @@ void readable_fs(unsigned long size/*in bytes*/, std::string& s) {
 
 #define TABULATION 8
 // Writes a number with a certain presentation
-void writeNumber(unsigned long number, DuConfig& config) {
+void writeNumber(DWORDLONG number, DuConfig& config) {
 	std::string size;
 	// file size
 	cout.width(TABULATION);
