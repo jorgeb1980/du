@@ -112,6 +112,10 @@ DuConfig& ArgumentsParser::exportConfig() {
 		if (CONTAINS(options, string("b"))) {
 			config.precision = Precision::BYTES;
 		}
+		// Files specified
+		for (list<string>::iterator it = this->files.begin(); it != this->files.end(); it++) {
+			config.files.push_back(*it);
+		}
 	}
 	return config;
 }

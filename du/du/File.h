@@ -11,14 +11,14 @@ private:
 	bool directory;
 	TCHAR* name;
 	std::list<File*> children;
-	unsigned long size;
+	DWORDLONG size;
 public:
 	
 	File::File(TCHAR *fullPath);
 	~File();
 	TCHAR* File::getName();
 	bool File::isDirectory();
-	unsigned long File::getSize();
+	DWORDLONG File::getSize();
 	std::list<File*>& getChildren();
 };
 

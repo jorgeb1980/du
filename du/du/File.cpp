@@ -46,7 +46,8 @@ File::File(TCHAR *fullPath) {
 
 				File *f = new File(filePath);
 				children.push_back(f);
-				size += f->getSize();
+				
+				size = (DWORDLONG) size + (DWORDLONG) f->getSize();
 
 				delete[] filePath;
 			}
@@ -61,7 +62,7 @@ File::File(TCHAR *fullPath) {
 		delete[] searchPath;
 	}
 	else {
-		size = (searchData.nFileSizeHigh * (MAXDWORD+1)) + searchData.nFileSizeLow;
+		size = (DWORDLONG) (searchData.nFileSizeHigh * (MAXDWORD+1)) + searchData.nFileSizeLow;
 	}
 }
 
@@ -86,6 +87,6 @@ std::list<File*>& File::getChildren() {
 }
 
 // size getter
-unsigned long File::getSize() {
+DWORDLONG File::getSize() {
 	return size;
 }
