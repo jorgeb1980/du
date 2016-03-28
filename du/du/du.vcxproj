@@ -69,8 +69,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
+      <AdditionalDependencies>libargs.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
@@ -84,9 +83,9 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ArgumentsParser.h" />
     <ClInclude Include="DuConfig.h" />
     <ClInclude Include="File.h" />
+    <ClInclude Include="libargs.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
@@ -94,7 +93,6 @@
     <ResourceCompile Include="app.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ArgumentsParser.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="du.cpp" />
     <ClCompile Include="DuConfig.cpp" />

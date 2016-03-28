@@ -4,6 +4,7 @@
 #include <tchar.h>
 #include <list>
 #include <windows.h>
+#include "libargs.h"
 // precision of the file size reading
 typedef enum Precision { HUMAN_READABLE, MEGABYTES, KILOBYTES, BYTES };
 
@@ -23,9 +24,9 @@ public:
 	TCHAR *currentDirectory;
 
 	// Files specified
-	std::list<std::string> files;
+	std::list<std::wstring> files;
 
-	DuConfig();
+	DuConfig(ArgumentsParser& arguments);
 	~DuConfig();	
 };
 

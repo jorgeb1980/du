@@ -3,20 +3,23 @@
 
 #include <list>
 #include <tchar.h>
+#include <string>
 #include <windows.h>
+
+using namespace std;
 
 // Recursive directory tree
 class File {
 private:
 	bool directory;
-	TCHAR* name;
+	wstring name;
 	std::list<File*> children;
 	DWORDLONG size;
 public:
 	
-	File::File(TCHAR *fullPath);
+	File::File(wstring& fullPath);
 	~File();
-	TCHAR* File::getName();
+	wstring& File::getName();
 	bool File::isDirectory();
 	DWORDLONG File::getSize();
 	std::list<File*>& getChildren();
