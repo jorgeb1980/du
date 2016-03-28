@@ -37,14 +37,17 @@ void printWrongArguments(string argument) {
 // http://programanddesign.com/cpp/human-readable-file-size-in-c/
 void readable_fs(DWORDLONG size/*in bytes*/, std::string& s) {
     int i = 0;
+	double dsize = size;
     const char* units[] = {"", "K", "M", "G", "T", "P", "E", "Z", "Y"};
-    while (size > 1024 && i <= 8) {
-        size /= 1024;
+    while (dsize > 1024 && i <= 8) {
+        dsize /= 1024;
 			i++;
     }
+	
 	std::string number;
 	std::stringstream strstream;
-	strstream << size;
+	strstream.precision(3);
+	strstream << dsize;
 	strstream >> number;
 	s = number + std::string(units[i]);
 }
