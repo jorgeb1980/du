@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include <iostream>
-#include "ArgumentsParser.h"
+#include "libargs.h"
+#include "DuConfig.h"
 #include <list>
 #include <windows.h>
 #include <tchar.h>
@@ -37,19 +38,22 @@ void printWrongArguments(string argument) {
 // http://programanddesign.com/cpp/human-readable-file-size-in-c/
 void readable_fs(DWORDLONG size/*in bytes*/, std::string& s) {
     int i = 0;
+	double dsize = size;
     const char* units[] = {"", "K", "M", "G", "T", "P", "E", "Z", "Y"};
-    while (size > 1024 && i <= 8) {
-        size /= 1024;
+    while (dsize > 1024 && i <= 8) {
+        dsize /= 1024;
 			i++;
     }
+	
 	std::string number;
 	std::stringstream strstream;
-	strstream << size;
+	strstream.precision(3);
+	strstream << dsize;
 	strstream >> number;
 	s = number + std::string(units[i]);
 }
 
-#define TABULATION 8
+#define TABULATION 10
 // Writes a number with a certain presentation
 void writeNumber(DWORDLONG number, DuConfig& config) {
 	std::string size;
@@ -74,21 +78,17 @@ void writeNumber(DWORDLONG number, DuConfig& config) {
 
 // Presentation of a file/directory
 void printFile(File& file, DuConfig& config) {
-	writeNumber(file.getSize(), config);
-	// Separation
-	int tmpSize = _tcslen(file.getName()) + 1;
-	TCHAR* tmp = new TCHAR[tmpSize];
-	memset(tmp, 0, sizeof(TCHAR)*tmpSize);
-	TCHAR* original = file.getName();
-	// VERY DIRTY!!! Only way I could think of replacing it while playing with TCHAR...
-	// However, being aware that this is crap, it has a very exciting C/C++ flavor :D
-	original = original + _tcslen(config.currentDirectory);
-	// Replace the root file path by '.'
-	_stprintf(tmp,_T(".%s"), original);
 
-	_tprintf(TEXT("%s"), tmp);
-	cout << "\n";
-	delete[] tmp;
+	writeNumber(file.getSize(), config);
+	// Remove the starting path
+	wstring original(file.getName());
+	string tmp(".");
+	original = original.substr(
+		wstring(config.currentDirectory).length(), 
+		(original.length() - wstring(config.currentDirectory).length()));
+	tmp.append(string(original.begin(), original.end()));
+
+	cout << tmp << "\n";
 }
 
 // Recursive call with depth control
@@ -98,7 +98,6 @@ void traverseI(File& file, DuConfig& config, int& depth) {
 		depth++;
 		if (!config.summarize || depth <= 1) {
 			for (list<File*>::iterator it = children.begin(); it != children.end(); it++) {
-				//PRINT_DIR((*it));
 				File f = *(*it);
 				traverseI(f, config, depth);
 			}
@@ -106,7 +105,6 @@ void traverseI(File& file, DuConfig& config, int& depth) {
 		printFile(file, config);
 	}
 }
-
 
 // Width traverse of the File structure
 void traverse(File& root, DuConfig& config) {
@@ -116,23 +114,39 @@ void traverse(File& root, DuConfig& config) {
 
 // Lists the contents of the directory
 void listContents(DuConfig& config) {
-	File root(config.currentDirectory);
-	traverse(root, config);
-	if (config.total) {
-		// Produce grand total
-		// Whatever it is used for??
-		writeNumber(root.getSize(), config);
-		cout << "total" << "\n";
+	for (list<wstring>::iterator it = config.files.begin(); it != config.files.end(); it++) {
+		File root((*it));
+		traverse(root, config);
+		if (config.total) {
+			// Produce grand total
+			// Whatever it is used for??
+			writeNumber(root.getSize(), config);
+			cout << "total" << "\n";
+		}
 	}
+}
+
+// Options supported by the application
+void populateOptions(list<string>& options) {
+	options.push_back("a");
+	options.push_back("b");
+	options.push_back("c");
+	options.push_back("h");
+	options.push_back("k");
+	options.push_back("m");
+	options.push_back("s");
+	options.push_back("--help");
 }
 
 // Application entry point
 // Quite outdated, my C++ is not quite up-to-date
 int main(int argc, char *argv[]) {
 	try {
-		ArgumentsParser parser(argc, argv);
+		list<string> options;
+		populateOptions(options);
+		ArgumentsParser parser(argc, argv, options);
 		//parser.listArguments();
-		DuConfig& config = parser.exportConfig();
+		DuConfig config(parser);
 		if (config.help) {
 			printHelp();
 		}
